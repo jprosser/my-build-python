@@ -14,13 +14,22 @@ permissions:
   contents: read
 
 jobs:
+
+  pythons:
+    runs-on: ubuntu-linux
+    outputs:
+      matrix: ${{ steps.set-pythons.outputs.matrix }}
+    steps:
+    - id: set-pythons
+      run: curl -s --url "https://raw.githubusercontent.com/python/devguide/refs/heads/main/include/release-cycle.json" | jq '.[] | select(.status!="end-of-life") | select(.branch | startswith("3.")) | .branch' | jq -s
+    
   build:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
-        
+        python-version: ${{fromJson(needs.set-pythons.outputs.matrix)}}
+
     steps:
     - uses: actions/checkout@v4
     - name: Install poetry
