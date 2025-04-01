@@ -16,7 +16,7 @@ permissions:
 jobs:
 
   pythons:
-    runs-on: ubuntu-linux
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-pythons.outputs.matrix }}
     steps:
