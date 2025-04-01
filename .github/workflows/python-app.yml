@@ -18,7 +18,7 @@ jobs:
   pythons:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-pythons.outputs.pythons }}
+      pythons: ${{ steps.set-pythons.outputs.pythons }}
     steps:
     - id: set-pythons
       run: |
