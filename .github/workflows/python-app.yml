@@ -21,7 +21,7 @@ jobs:
       matrix: ${{ steps.set-pythons.outputs.matrix }}
     steps:
     - id: set-pythons
-      run: curl -s --url "https://raw.githubusercontent.com/python/devguide/refs/heads/main/include/release-cycle.json" | jq '.[] | select(.status!="end-of-life") | select(.branch | startswith("3.")) | .branch' | jq -s
+      run: curl -s --url "https://raw.githubusercontent.com/python/devguide/refs/heads/main/include/release-cycle.json" | jq '.[] | select(.status!="end-of-life") | select(.branch | startswith("3.")) | .branch' | jq -s -c
     
   build:
 
