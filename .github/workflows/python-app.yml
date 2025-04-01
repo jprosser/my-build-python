@@ -29,7 +29,7 @@ jobs:
     needs: pythons
     strategy:
       matrix:
-        python-version: ${{fromJson(needs.set-pythons.outputs.matrix)}}
+        python-version: ${{ fromJson(needs.set-pythons.outputs.matrix) }}
 
     steps:
     - uses: actions/checkout@v4
