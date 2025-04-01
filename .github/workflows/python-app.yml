@@ -18,10 +18,13 @@ jobs:
   pythons:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-pythons.outputs.matrix }}
+      matrix: ${{ steps.set-pythons.outputs.pythons }}
     steps:
     - id: set-pythons
-      run: matrix=`curl -s --url "https://raw.githubusercontent.com/python/devguide/refs/heads/main/include/release-cycle.json" | jq '.[] | select(.status!="end-of-life") | select(.branch | startswith("3.")) | .branch' | jq -s -c`
+      run: |
+        data=`curl -s --url "https://raw.githubusercontent.com/python/devguide/refs/heads/main/include/release-cycle.json"`
+        pythonarray=`echo ${data} | jq '.[] | select(.status!="end-of-life") | select(.branch | startswith("3.")) | .branch' | jq -s -c`
+        echo "pythons=${pythonarray}" >> "$GITHUB_OUTPUT"
     
   build:
 
@@ -29,7 +32,7 @@ jobs:
     needs: pythons
     strategy:
       matrix:
-        python-version: ${{ fromJson(needs.set-pythons.outputs.matrix) }}
+        python-version: ${{needs.set-pythons.outputs.pythons}}
 
     steps:
     - uses: actions/checkout@v4
