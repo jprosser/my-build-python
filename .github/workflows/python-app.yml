@@ -18,7 +18,7 @@ jobs:
   pythons:
     runs-on: ubuntu-latest
     outputs:
-      pythons: ${{ steps.set-pythons.outputs.pythons }}
+      versions: ${{ steps.set-pythons.outputs.pythons }}
     steps:
     - id: set-pythons
       run: |
@@ -32,7 +32,7 @@ jobs:
     needs: pythons
     strategy:
       matrix:
-        python-version: ${{needs.set-pythons.outputs.pythons}}
+        python-version: ${{needs.pythons.outputs.versions}}
 
     steps:
     - uses: actions/checkout@v4
