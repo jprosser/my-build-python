@@ -9,6 +9,12 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -35,19 +41,29 @@ jobs:
         python-version: ${{ fromJson(needs.pythons.outputs.versions) }}
 
     steps:
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true
+      timeout-minutes: 3
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+
     - uses: actions/checkout@v4
     - name: Install poetry
       run: pipx install poetry
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         poetry --version
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
