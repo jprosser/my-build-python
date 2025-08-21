@@ -29,7 +29,7 @@ jobs:
     - id: set-pythons
       run: |
         data=`curl -s --url "https://raw.githubusercontent.com/python/devguide/refs/heads/main/include/release-cycle.json"`
-        pythonarray=`echo ${data} | jq '.[] | select(.status!="end-of-life") | select(.branch | startswith("3.")) | .branch' | jq -s -c`
+        pythonarray=`echo ${data} | jq '.[] | select((.status!="end-of-life") and (.status!="prerelease")) | select(.branch | startswith("3.")) | .branch' | jq -s -c`
         echo "pythons=${pythonarray}" >> "$GITHUB_OUTPUT"
     
   build:
