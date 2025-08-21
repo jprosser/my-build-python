@@ -41,16 +41,16 @@ jobs:
         python-version: ${{ fromJson(needs.pythons.outputs.versions) }}
 
     steps:
+    - uses: actions/checkout@v4
+    - name: Install poetry
+      run: pipx install poetry
+
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       with:
         limit-access-to-actor: true
       timeout-minutes: 3
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-
-    - uses: actions/checkout@v4
-    - name: Install poetry
-      run: pipx install poetry
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
